@@ -1,0 +1,23 @@
+Sys.setlocale("LC_TIME", "C")
+
+data <- read.csv("household_power_consumption.txt", sep=";")
+data <- data[data$Date %in% c("1/2/2007", "2/2/2007"),]
+gap <-as.numeric(as.character(data$Global_active_power))
+grp <-as.numeric(as.character(data$Global_reactive_power))
+vt <-as.numeric(as.character(data$Voltage))
+sm1 <-as.numeric(as.character(data$Sub_metering_1))
+sm2 <-as.numeric(as.character(data$Sub_metering_2))
+sm3 <-as.numeric(as.character(data$Sub_metering_3))
+datetime <- paste(as.character(data$Date), as.character(data$Time))
+datetime <- strptime(datetime, format = "%d/%m/%Y %H:%M:%S")
+
+png("plot4.png", width = 480, height = 480)
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 2), oma = c(0, 0, 2, 0))
+plot(datetime, gap, xlab = "", ylab = "Global Active Power", type="l")
+plot(datetime, vt, ylab = "Voltage", type="l")
+plot(datetime, sm1, xlab = "", ylab = "Energy sub metering", type="l")
+lines(datetime, sm2, col = "red")
+lines(datetime, sm3, col = "blue")
+legend("topright", col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty="solid", bty = "n", cex = 0.8)
+plot(datetime, grp, ylab = "Global_reactive_power", type="l")
+dev.off()
